@@ -33,13 +33,43 @@ class Link:
             return  # return if no packet to transfer
         if len(pkt_S) > self.out_intf.mtu:
             print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
+            print("need to segment")
+
+            address = pkt_S[0:5]
+            fullMessage = pkt_S[5:]
+
+            print("address: ", address)
+            print("message: ", fullMessage)
+
+            halfwayPoint = int(len(fullMessage)/2)
+
+            firstHalf = address + (fullMessage[:halfwayPoint])
+            secondHalf = address + (fullMessage[halfwayPoint:])
+
+            print("first segment: ", firstHalf)
+            print("second segment: ", secondHalf)
+
+            try:
+                self.out_intf.put(firstHalf)
+                self.out_intf.put(secondHalf)
+                print('%s: transmitting packet "%s"' % (self, firstHalf))
+                print('%s: transmitting packet "%s"' % (self, secondHalf))
+            except queue.Full:
+                print('%s: packet lost' % (self))
+                pass
+
             return  # return without transmitting if packet too big
         # otherwise transmit the packet
         try:
             self.out_intf.put(pkt_S)
+            #self.out_intf.put(pkt_S)
+            print()
             print('%s: transmitting packet "%s"' % (self, pkt_S))
+            print()
         except queue.Full:
+            print()
             print('%s: packet lost' % (self))
+            print()
             pass
 
 
@@ -62,11 +92,15 @@ class LinkLayer:
 
     ## thread target for the network to keep transmitting data across links
     def run(self):
+        print()
         print(threading.currentThread().getName() + ': Starting')
+        print()
         while True:
             # transfer one packet on all the links
             self.transfer()
             # terminate
             if self.stop:
+                print()
                 print(threading.currentThread().getName() + ': Ending')
+                print()
                 return
