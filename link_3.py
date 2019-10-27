@@ -1,6 +1,8 @@
 import queue
 import threading
 import math
+from time import sleep
+import random
 
 
 ## An abstraction of a link between router interfaces
@@ -29,6 +31,7 @@ class Link:
 
     ##transmit a packet from the 'from' to the 'to' interface
     def tx_pkt(self):
+        sleep(random.random()/4)
         pkt_S = self.in_intf.get()
         if pkt_S is None:
             return  # return if no packet to transfer
@@ -36,13 +39,15 @@ class Link:
             print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
             print("need to segment")
 
-            address = pkt_S[0:5]
+            address = pkt_S[0:3]
+            source = pkt_S[3:5]
             fullMessage = pkt_S[5:]
             totalLength = len(fullMessage)
             numSegments = int(math.ceil(totalLength / self.out_intf.mtu))
             segmentSize = int(math.ceil(totalLength / numSegments))
 
             print("address: ", address)
+            print("source: ", source)
             print("message: ", fullMessage)
             print("length: ", totalLength)
             print("number of segments needed: ", numSegments)
@@ -59,7 +64,7 @@ class Link:
 
             #apply address to segments
             for i in range(len(segmentList)):
-                segmentList[i] = address + segmentList[i]
+                segmentList[i] = address + source + segmentList[i]
                 print(segmentList[i])
 
             #send segments
@@ -76,13 +81,13 @@ class Link:
         try:
             self.out_intf.put(pkt_S)
             #self.out_intf.put(pkt_S)
-            print()
+            #print()
             print('%s: transmitting packet "%s"' % (self, pkt_S))
-            print()
+            #print()
         except queue.Full:
-            print()
+            #print()
             print('%s: packet lost' % (self))
-            print()
+            #print()
             pass
 
 

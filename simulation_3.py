@@ -2,10 +2,11 @@ import network_3 as network
 import link_3 as link
 import threading
 from time import sleep
+import random
 
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited
-simulation_time = 3  # give the network sufficient time to transfer all packets before quitting
+simulation_time = 10  # give the network sufficient time to transfer all packets before quitting
 
 
 if __name__ == '__main__':
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     server4 = network.Host(4)
     object_L.append(server4)
 
-    router_a = network.Router(name='A', intf_count=1, max_queue_size=router_queue_size)
+    router_a = network.Router(name='A', intf_count=2, max_queue_size=router_queue_size)
     object_L.append(router_a)
 
     router_b = network.Router(name='B', intf_count=1, max_queue_size=router_queue_size)
@@ -40,7 +41,7 @@ if __name__ == '__main__':
     router_c = network.Router(name='C', intf_count=1, max_queue_size=router_queue_size)
     object_L.append(router_c)
 
-    router_d = network.Router(name='D', intf_count=1, max_queue_size=router_queue_size)
+    router_d = network.Router(name='D', intf_count=2, max_queue_size=router_queue_size)
     object_L.append(router_d)
 
 
@@ -57,11 +58,11 @@ if __name__ == '__main__':
     link_layer.add_link(link.Link(client1, 0, router_a, 0, 50))
     link_layer.add_link(link.Link(client2, 0, router_a, 0, 50))
     link_layer.add_link(link.Link(router_a, 0, router_b, 0, 50))
-    link_layer.add_link(link.Link(router_a, 0, router_c, 0, 50))
+    link_layer.add_link(link.Link(router_a, 1, router_c, 0, 50))
     link_layer.add_link(link.Link(router_b, 0, router_d, 0, 50))
     link_layer.add_link(link.Link(router_c, 0, router_d, 0, 50))
     link_layer.add_link(link.Link(router_d, 0, server3, 0, 50))
-    link_layer.add_link(link.Link(router_d, 0, server4, 0, 50))
+    link_layer.add_link(link.Link(router_d, 1, server4, 0, 50))
 
     # start all the objects
     thread_L = []
@@ -89,12 +90,16 @@ if __name__ == '__main__':
     #for i in range(3):
     #    client.udt_send(2, 'Sample data %d' % i)
 
-    client1.udt_send(3, "testing send to 3")
+    client1.udt_send(3, 1, "sending from 1 to 3")
+    client1.udt_send(4, 1, "sending from 1 to 4")
+    client2.udt_send(3, 2, "sending from 2 to 3")
+    client2.udt_send(4, 2, "sending from 2 to 4")
 
     #client.udt_send(2, 'first1234_second123_third1234_fourth123_fifth1234_sixth1234_seventh12_eighth123_')
 
     # give the network sufficient time to transfer all packets before quitting
     sleep(simulation_time)
+    sleep(random.random()/4)
 
     # join all threads
     for o in object_L:
