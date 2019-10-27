@@ -1,5 +1,6 @@
 import queue
 import threading
+import math
 
 
 ## An abstraction of a link between router interfaces
@@ -33,13 +34,55 @@ class Link:
             return  # return if no packet to transfer
         if len(pkt_S) > self.out_intf.mtu:
             print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
+            print("need to segment")
+
+            address = pkt_S[0:5]
+            fullMessage = pkt_S[5:]
+            totalLength = len(fullMessage)
+            numSegments = int(math.ceil(totalLength / self.out_intf.mtu))
+            segmentSize = int(math.ceil(totalLength / numSegments))
+
+            print("address: ", address)
+            print("message: ", fullMessage)
+            print("length: ", totalLength)
+            print("number of segments needed: ", numSegments)
+            print("size of segments: ", segmentSize)
+
+            segmentList = []
+            for i in range(numSegments):
+                j = i * segmentSize
+                if (i < numSegments - 1):
+                    segmentList.append(fullMessage[j:(j + segmentSize)])
+                else:
+                    segmentList.append(fullMessage[j:])
+            print("segment list: ", segmentList)
+
+            #apply address to segments
+            for i in range(len(segmentList)):
+                segmentList[i] = address + segmentList[i]
+                print(segmentList[i])
+
+            #send segments
+            for i in range(len(segmentList)):
+                try:
+                    self.out_intf.put(segmentList[i])
+                    print('%s: transmitting packet "%s"' % (self, segmentList[i]))
+                except queue.Full:
+                    print('%s: packet lost' % (self))
+                    pass
+
             return  # return without transmitting if packet too big
         # otherwise transmit the packet
         try:
             self.out_intf.put(pkt_S)
+            #self.out_intf.put(pkt_S)
+            print()
             print('%s: transmitting packet "%s"' % (self, pkt_S))
+            print()
         except queue.Full:
+            print()
             print('%s: packet lost' % (self))
+            print()
             pass
 
 
@@ -62,11 +105,15 @@ class LinkLayer:
 
     ## thread target for the network to keep transmitting data across links
     def run(self):
+        print()
         print(threading.currentThread().getName() + ': Starting')
+        print()
         while True:
             # transfer one packet on all the links
             self.transfer()
             # terminate
             if self.stop:
+                print()
                 print(threading.currentThread().getName() + ': Ending')
+                print()
                 return
