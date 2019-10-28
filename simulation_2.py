@@ -2,6 +2,7 @@ import network_2 as network
 import link_2 as link
 import threading
 from time import sleep
+import random
 
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited

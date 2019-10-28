@@ -1,6 +1,8 @@
 import queue
 import threading
 import math
+from time import sleep
+import random
 
 
 ## An abstraction of a link between router interfaces
@@ -29,6 +31,7 @@ class Link:
 
     ##transmit a packet from the 'from' to the 'to' interface
     def tx_pkt(self):
+        sleep(random.random() / 4)
         pkt_S = self.in_intf.get()
         if pkt_S is None:
             return  # return if no packet to transfer

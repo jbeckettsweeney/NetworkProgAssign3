@@ -154,6 +154,7 @@ class Router:
                     # forwarding table to find the appropriate outgoing interface
                     # for now we assume the outgoing interface is also i
 
+                    #routing table
                     if (self.name == "A"):
                         print("we are in A")
                         if (source == 1):

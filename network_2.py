@@ -1,5 +1,7 @@
 import queue
 import threading
+from time import sleep
+import random
 
 
 ## wrapper class for a queue of packets
@@ -34,6 +36,7 @@ class NetworkPacket:
     ##@param dst_addr: address of the destination host
     # @param data_S: packet payload
     def __init__(self, dst_addr, data_S):
+        sleep(random.random() / 4)
         self.dst_addr = dst_addr
         self.data_S = data_S
 
@@ -74,6 +77,7 @@ class Host:
     # @param dst_addr: destination address for the packet
     # @param data_S: data being transmitted to the network layer
     def udt_send(self, dst_addr, data_S):
+        sleep(random.random() / 4)
         p = NetworkPacket(dst_addr, data_S)
         self.out_intf_L[0].put(p.to_byte_S())  # send packets always enqueued successfully
         print()
@@ -82,6 +86,7 @@ class Host:
 
     ## receive packet from the network layer
     def udt_receive(self):
+        sleep(random.random() / 4)
         pkt_S = self.in_intf_L[0].get()
         if pkt_S is not None:
             print()
@@ -124,6 +129,7 @@ class Router:
     ## look through the content of incoming interfaces and forward to
     # appropriate outgoing interfaces
     def forward(self):
+        sleep(random.random() / 4)
         for i in range(len(self.in_intf_L)):
             pkt_S = None
             try:

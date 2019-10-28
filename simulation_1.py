@@ -2,10 +2,11 @@ import network_1 as network
 import link_1 as link
 import threading
 from time import sleep
+import random
 
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited
-simulation_time = 1  # give the network sufficient time to transfer all packets before quitting
+simulation_time = 10  # give the network sufficient time to transfer all packets before quitting
 
 
 if __name__ == '__main__':
