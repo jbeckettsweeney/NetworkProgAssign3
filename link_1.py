@@ -3,6 +3,11 @@ import threading
 from time import sleep
 import random
 
+#authors:
+#Chris Erickson
+#Anthony Nardiello
+#J. Beckett Sweeney
+
 
 ## An abstraction of a link between router interfaces
 class Link:

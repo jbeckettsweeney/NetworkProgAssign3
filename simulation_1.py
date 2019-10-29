@@ -4,6 +4,11 @@ import threading
 from time import sleep
 import random
 
+#authors:
+#Chris Erickson
+#Anthony Nardiello
+#J. Beckett Sweeney
+
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited
 simulation_time = 10  # give the network sufficient time to transfer all packets before quitting
@@ -41,8 +46,8 @@ if __name__ == '__main__':
         t.start()
 
     # create some send events    
-    for i in range(3):
-        client.udt_send(2, 'Sample data %d' % i)
+    #for i in range(3):
+        #client.udt_send(2, 'Sample data %d' % i)
 
     client.udt_send(2, '123456789_123456789_123456789_123456789_987654321_987654321_987654321_987654321_')
 

@@ -3,6 +3,10 @@ import threading
 from time import sleep
 import random
 
+#authors:
+#Chris Erickson
+#Anthony Nardiello
+#J. Beckett Sweeney
 
 ## wrapper class for a queue of packets
 class Interface:

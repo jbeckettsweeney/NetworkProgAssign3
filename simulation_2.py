@@ -4,6 +4,11 @@ import threading
 from time import sleep
 import random
 
+#authors:
+#Chris Erickson
+#Anthony Nardiello
+#J. Beckett Sweeney
+
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited
 simulation_time = 3  # give the network sufficient time to transfer all packets before quitting
