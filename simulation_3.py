@@ -11,7 +11,7 @@ import random
 
 ##configuration parameters
 router_queue_size = 0  # 0 means unlimited
-simulation_time = 10  # give the network sufficient time to transfer all packets before quitting
+simulation_time = 5  # give the network sufficient time to transfer all packets before quitting
 
 
 if __name__ == '__main__':
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     client2.udt_send(3, 2, "sending from 2 to 3")
     client2.udt_send(4, 2, "sending from 2 to 4")
 
-    #client.udt_send(2, 'first1234_second123_third1234_fourth123_fifth1234_sixth1234_seventh12_eighth123_')
+    #client1.udt_send(3, 1, 'first1234_second123_third1234_fourth123_fifth1234_sixth1234_seventh12_eighth123_')
 
     # give the network sufficient time to transfer all packets before quitting
     sleep(simulation_time)
